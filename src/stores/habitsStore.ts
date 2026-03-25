@@ -8,11 +8,12 @@ interface HabitsState {
   logs: HabitLog[]
   loading: boolean
   fetch: (userId: string) => Promise<void>
-  add: (habit: Omit<Habit, 'id' | 'created_at' | 'streak' | 'best_streak'>) => Promise<void>
+  add: (habit: Omit<Habit, 'id' | 'created_at' | 'streak' | 'best_streak'>) => Promise<boolean>
   update: (id: string, updates: Partial<Habit>) => Promise<void>
   remove: (id: string) => Promise<void>
   toggleToday: (habitId: string, userId: string) => Promise<void>
   isCompletedToday: (habitId: string) => boolean
+  subscribeRealtime: (userId: string) => () => void
 }
 
 export const useHabitsStore = create<HabitsState>((set, get) => ({
@@ -34,12 +35,14 @@ export const useHabitsStore = create<HabitsState>((set, get) => ({
   },
 
   add: async (habit) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('habits')
       .insert({ ...habit, streak: 0, best_streak: 0 })
       .select()
       .single()
+    if (error) { console.error('[habitsStore.add] INSERT error:', error.message, error.details, error.hint); return false }
     if (data) set({ habits: [...get().habits, data] })
+    return true
   },
 
   update: async (id, updates) => {
@@ -97,5 +100,25 @@ export const useHabitsStore = create<HabitsState>((set, get) => ({
   isCompletedToday: (habitId) => {
     const today = todayISO()
     return get().logs.some((l) => l.habit_id === habitId && l.date === today)
+  },
+
+  subscribeRealtime: (userId) => {
+    const channel = supabase
+      .channel(`habits:${userId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'habits', filter: `user_id=eq.${userId}` },
+        (payload) => {
+          const { eventType, new: newRow, old: oldRow } = payload
+          if (eventType === 'INSERT') {
+            const exists = get().habits.find((h) => h.id === (newRow as Habit).id)
+            if (!exists) set({ habits: [...get().habits, newRow as Habit] })
+          } else if (eventType === 'UPDATE') {
+            set({ habits: get().habits.map((h) => h.id === (newRow as Habit).id ? (newRow as Habit) : h) })
+          } else if (eventType === 'DELETE') {
+            set({ habits: get().habits.filter((h) => h.id !== (oldRow as Habit).id) })
+          }
+        }
+      )
+      .subscribe()
+    return () => { supabase.removeChannel(channel) }
   },
 }))

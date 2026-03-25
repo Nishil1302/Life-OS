@@ -29,7 +29,8 @@ export const useGoalsStore = create<GoalsState>((set, get) => ({
 
   add: async (goal) => {
     const { data, error } = await supabase.from('goals').insert(goal).select().single()
-    if (error || !data) return null
+    if (error) { console.error('[goalsStore.add] INSERT error:', error.message, error.details, error.hint); return null }
+    if (!data) { console.error('[goalsStore.add] INSERT returned no data'); return null }
     set({ goals: [data, ...get().goals] })
     return data
   },
@@ -98,7 +99,10 @@ export const useGoalsStore = create<GoalsState>((set, get) => ({
         (payload) => {
           const { eventType, new: newRow, old: oldRow } = payload
           if (eventType === 'INSERT') {
-            set({ goals: [newRow as Goal, ...get().goals] })
+            // Guard: add() already pushed the row optimistically — skip if already present
+            const incoming = newRow as Goal
+            if (get().goals.some((g) => g.id === incoming.id)) return
+            set({ goals: [incoming, ...get().goals] })
           } else if (eventType === 'UPDATE') {
             set({ goals: get().goals.map((g) => (g.id === (newRow as Goal).id ? (newRow as Goal) : g)) })
           } else if (eventType === 'DELETE') {

@@ -92,8 +92,14 @@ export default function HabitsPage() {
       goal_id: form.goal_id || undefined,
       category_id: form.category_id || undefined,
     }
-    if (editing) { await update(editing.id, payload); toast.success('Habit updated') }
-    else { await add(payload); toast.success('Habit created') }
+    if (editing) {
+      await update(editing.id, payload)
+      toast.success('Habit updated')
+    } else {
+      const ok = await add(payload)
+      if (!ok) { setSaving(false); toast.error('Failed to create habit — check console for details'); return }
+      toast.success('Habit created')
+    }
     setSaving(false)
     setModalOpen(false)
   }

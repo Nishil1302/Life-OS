@@ -60,7 +60,7 @@ function ProtectedRoutes() {
   const { user } = useAuthStore()
   const { fetch: fetchTasks, subscribeRealtime: subscribeTasks } = useTasksStore()
   const { fetch: fetchGoals, subscribeRealtime: subscribeGoals } = useGoalsStore()
-  const { fetch: fetchHabits } = useHabitsStore()
+  const { fetch: fetchHabits, subscribeRealtime: subscribeHabits } = useHabitsStore()
   const { fetch: fetchFocus } = useFocusStore()
   const { fetch: fetchNotes, subscribeRealtime } = useNotesStore()
   const { fetch: fetchReports } = useWeeklyReportStore()
@@ -79,7 +79,8 @@ function ProtectedRoutes() {
     const unsubGoals = subscribeGoals(user.id)
     const unsubTasks = subscribeTasks(user.id)
     const unsubCategories = subscribeCategories(user.id)
-    return () => { unsubNotes(); unsubGoals(); unsubTasks(); unsubCategories() }
+    const unsubHabits = subscribeHabits(user.id)
+    return () => { unsubNotes(); unsubGoals(); unsubTasks(); unsubCategories(); unsubHabits() }
   }, [user?.id])
 
   if (!user) return <Navigate to="/auth" replace />

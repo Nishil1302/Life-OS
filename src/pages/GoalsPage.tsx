@@ -67,8 +67,14 @@ export default function GoalsPage() {
       progress: editing?.progress ?? 0,
       category_id: form.category_id || undefined,
     }
-    if (editing) { await update(editing.id, payload); toast.success('Goal updated') }
-    else { await add(payload); toast.success('Goal created') }
+    if (editing) {
+      await update(editing.id, payload)
+      toast.success('Goal updated')
+    } else {
+      const result = await add(payload)
+      if (!result) { setSaving(false); toast.error('Failed to create goal — check console for details'); return }
+      toast.success('Goal created')
+    }
     setSaving(false)
     setModalOpen(false)
   }

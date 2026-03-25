@@ -63,6 +63,8 @@ function resolveEffectiveStatus(task: Task): TaskStatus {
  */
 function applyRecurrenceReset(tasks: Task[]): Task[] {
   return tasks.map((task) => {
+    // Skip patch entirely if recurrence column isn't in the DB yet
+    if (!task.recurrence || task.recurrence === 'none') return task
     const effective = resolveEffectiveStatus(task)
     if (effective !== task.status) {
       // Patch DB without blocking render
