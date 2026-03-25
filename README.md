@@ -1,152 +1,157 @@
-# LifeOS — FocusForge
+# 🚀 LifeOS – FocusForge
 
-A production-ready productivity SaaS built with React, TypeScript, Tailwind CSS, Supabase, and Zustand.
+A modern, production-ready productivity SaaS application designed to help users manage tasks, goals, habits, and focus efficiently.
 
-## Features
+---
 
-- **Dashboard** — Life Score, habits, tasks, goals, weekly focus chart
-- **Tasks** — Create/edit/delete, priority, status, due date, goal linking
-- **Goals** — Progress tracking, color coding, linked tasks
-- **Habits** — Daily check-in, streaks, 30-day heatmap, Life Score impact
-- **Focus Mode** — Pomodoro timer, SVG ring, session history, task linking
-- **Notes** — Auto-save, realtime sync via Supabase
-- **AI Coach** — Real insights from your data (tasks, habits, focus, notes)
-- **Calendar** — Tasks and focus sessions by date
-- **Analytics** — 14-day charts, pie charts, habit streaks
-- **Quick Add** — Natural language: "Study DSA tomorrow 5pm"
+## ✨ Features
 
-## Setup
+* ✅ Task Management (To Do → In Progress → Done)
+* 🎯 Goal Tracking with progress system
+* 🔁 Recurring Tasks (daily, weekly, custom)
+* 🏷️ Category System (Study, Health, Fun, etc.)
+* 🔔 Smart Notifications
+* ⏱ Focus Mode (Pomodoro timer)
+* 📊 Analytics & Weekly Reports
+* 🤖 AI Coach (productivity insights)
+* 🔗 Real-time sync using Supabase
+* 🌙 Light / Dark Mode (Apple-style UI)
 
-### 1. Clone and install
+---
+
+## 🛠 Tech Stack
+
+* **Frontend:** React + Vite
+* **Styling:** Tailwind CSS
+* **Backend:** Supabase (Auth + Database + Realtime)
+* **State Management:** Custom hooks / store
+* **Auth:** Google OAuth
+
+---
+
+## 📸 Screenshots
+
+> Add your app screenshots here
+
+```
+<img width="1864" height="927" alt="image" src="https://github.com/user-attachments/assets/94388e62-6228-498e-934a-b66759343fcb" />
+<img width="1864" height="918" alt="image" src="https://github.com/user-attachments/assets/5ba7f4e6-09da-4350-8f6f-c9a8ae6437ed" />
+<img width="1858" height="914" alt="image" src="https://github.com/user-attachments/assets/3cadaf6e-760c-48de-bea1-b5e7b55f7e5d" />
+<img width="1860" height="914" alt="image" src="https://github.com/user-attachments/assets/d7f34802-af5f-43e3-971f-df2c28fd0624" />
+<img width="1863" height="919" alt="image" src="https://github.com/user-attachments/assets/ed878876-3c52-4f9e-8744-c55bfb5b68e1" />
+<img width="1857" height="935" alt="image" src="https://github.com/user-attachments/assets/c22c0fb7-00c0-4aa4-99e6-48af45d8b9f5" />
+<img width="1858" height="921" alt="image" src="https://github.com/user-attachments/assets/a4e5b21a-5337-4828-9ef8-92a3667fe87b" />
+<img width="1854" height="919" alt="image" src="https://github.com/user-attachments/assets/02284b1a-dfbe-4a96-8cf2-c8737d6644f4" />
+<img width="1866" height="924" alt="image" src="https://github.com/user-attachments/assets/b8ce17cd-7d4d-47b5-a79b-4ff7e0f94087" />
+
+```
+Last image is of light theme to compare with dark theme
+---
+
+## ⚡ Getting Started
+
+### 1. Clone the repository
 
 ```bash
-npm install --include=dev
+git clone https://github.com/your-username/lifeos-focusforge.git
+cd lifeos-focusforge
 ```
 
-### 2. Create a Supabase project
+---
 
-Go to [supabase.com](https://supabase.com) and create a new project.
+### 2. Install dependencies
 
-### 3. Configure environment
+```bash
+npm install
+```
 
-Edit `.env`:
+---
+
+### 3. Setup environment variables
+
+Create a `.env` file in root:
 
 ```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_SUPABASE_URL=[your_supabase_url](https://pwvqekilqdxhfkguronp.supabase.co)
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dnFla2lscWR4aGZrZ3Vyb25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1NTYzMDQsImV4cCI6MjA4OTEzMjMwNH0.T9YCBITxux9F-pM5TpLWGEOmtGNP6uGIopuJnQ9YfZ8
 ```
 
-### 4. Run the database schema
+---
 
-In your Supabase project → SQL Editor, run the SQL from **Settings → Database Setup → Show SQL** inside the app, or paste this:
-
-```sql
-create table if not exists tasks (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users not null,
-  title text not null,
-  description text,
-  status text default 'todo' check (status in ('todo','in-progress','done')),
-  priority text default 'medium' check (priority in ('low','medium','high')),
-  due_date timestamptz,
-  goal_id uuid,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
-alter table tasks enable row level security;
-create policy "Users own tasks" on tasks for all using (auth.uid() = user_id);
-
-create table if not exists goals (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users not null,
-  title text not null,
-  description text,
-  progress int default 0,
-  target_date date,
-  color text default '#6366f1',
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
-alter table goals enable row level security;
-create policy "Users own goals" on goals for all using (auth.uid() = user_id);
-
-create table if not exists habits (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users not null,
-  title text not null,
-  description text,
-  frequency text default 'daily',
-  streak int default 0,
-  best_streak int default 0,
-  color text default '#6366f1',
-  created_at timestamptz default now()
-);
-alter table habits enable row level security;
-create policy "Users own habits" on habits for all using (auth.uid() = user_id);
-
-create table if not exists habit_logs (
-  id uuid primary key default gen_random_uuid(),
-  habit_id uuid references habits on delete cascade not null,
-  user_id uuid references auth.users not null,
-  date date not null,
-  completed_at timestamptz default now(),
-  unique(habit_id, date)
-);
-alter table habit_logs enable row level security;
-create policy "Users own habit_logs" on habit_logs for all using (auth.uid() = user_id);
-
-create table if not exists focus_sessions (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users not null,
-  task_id uuid,
-  duration int not null,
-  started_at timestamptz default now(),
-  ended_at timestamptz,
-  notes text
-);
-alter table focus_sessions enable row level security;
-create policy "Users own focus_sessions" on focus_sessions for all using (auth.uid() = user_id);
-
-create table if not exists notes (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users not null,
-  title text default 'Untitled',
-  content text default '',
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
-alter table notes enable row level security;
-create policy "Users own notes" on notes for all using (auth.uid() = user_id);
-
-alter publication supabase_realtime add table notes;
-alter publication supabase_realtime add table focus_sessions;
-```
-
-### 5. Run the app
+### 4. Run the app
 
 ```bash
 npm run dev
 ```
 
-## Tech Stack
+---
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 19 + TypeScript + Vite |
-| Styling | Tailwind CSS v3 (custom design system) |
-| State | Zustand |
-| Backend | Supabase (Auth + PostgreSQL + Realtime) |
-| Routing | React Router DOM v7 |
-| Charts | Recharts |
-| Icons | Lucide React |
-| Dates | date-fns |
+## 🔐 Environment Variables
 
-## Life Score Formula
+| Variable               | Description          |
+| ---------------------- | -------------------- |
+| VITE_SUPABASE_URL      | Supabase project URL |
+| VITE_SUPABASE_ANON_KEY | Public API key       |
+
+---
+
+## 📂 Project Structure
 
 ```
-Life Score = Tasks (40%) + Habits (30%) + Focus (30%)
+src/
+ ├── components/
+ ├── pages/
+ ├── hooks/
+ ├── stores/
+ ├── lib/
+ └── assets/
 ```
 
-- Tasks: % of today's tasks completed
-- Habits: % of habits checked in today
-- Focus: % of 2-hour daily goal reached
+---
+
+## 🚀 Deployment
+
+You can deploy easily using:
+
+* Vercel
+* Netlify
+
+---
+
+## 📌 Highlights
+
+* Real-time data synchronization
+* Clean and scalable architecture
+* Production-level UI/UX
+* Modular and maintainable codebase
+
+---
+
+## 📈 Future Improvements
+
+* Drag & Drop Kanban Board
+* Mobile App (React Native)
+* Advanced AI Recommendations
+* Team Collaboration Features
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+---
+
+## 📄 License
+
+This project is open-source and available under the MIT License.
+
+---
+
+## 👨‍💻 Author
+
+**Nishil**
+
+---
+
+⭐ If you like this project, give it a star!
