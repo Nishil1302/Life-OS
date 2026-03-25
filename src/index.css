@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Variables ─────────────────────────────────────────── */
+:root {
+  --bg-primary:    #F5F5F7;
+  --bg-card:       rgba(255,255,255,0.72);
+  --bg-elevated:   rgba(255,255,255,0.5);
+  --bg-overlay:    rgba(255,255,255,0.85);
+  --border-color:  rgba(0,0,0,0.07);
+  --border-subtle: rgba(0,0,0,0.04);
+  --text-primary:  #1d1d1f;
+  --text-muted:    #424245;
+  --text-subtle:   #86868b;
+  --shadow-card:   0 2px 20px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+  --shadow-float:  0 8px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+  --scrollbar-thumb: rgba(0,0,0,0.15);
+  --accent:        #6366f1;
+  --accent-soft:   rgba(99,102,241,0.1);
+}
+
+.dark {
+  --bg-primary:    #000000;
+  --bg-card:       rgba(255,255,255,0.05);
+  --bg-elevated:   rgba(255,255,255,0.08);
+  --bg-overlay:    rgba(28,28,30,0.92);
+  --border-color:  rgba(255,255,255,0.08);
+  --border-subtle: rgba(255,255,255,0.04);
+  --text-primary:  #f5f5f7;
+  --text-muted:    #aeaeb2;
+  --text-subtle:   #636366;
+  --shadow-card:   0 2px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  --shadow-float:  0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+  --scrollbar-thumb: rgba(255,255,255,0.12);
+  --accent:        #818cf8;
+  --accent-soft:   rgba(129,140,248,0.12);
+}
+
+/* ─── Base ──────────────────────────────────────────────────── */
+@layer base {
+  * { border-color: var(--border-color); box-sizing: border-box; }
+
+  html {
+    background-color: var(--bg-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+    font-feature-settings: 'cv02','cv03','cv04','cv11';
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+}
+
+/* ─── Components ────────────────────────────────────────────── */
+@layer components {
+
+  /* Glass Card — core primitive */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-card);
+    @apply rounded-2xl backdrop-blur-xl;
+  }
+  .card-elevated {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    @apply rounded-2xl backdrop-blur-xl;
+  }
+
+  /* Input */
+  .input {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    @apply rounded-xl px-3 py-2 w-full text-sm
+           placeholder:text-[var(--text-subtle)]
+           focus:outline-none focus:border-[var(--accent)]
+           focus:ring-2 focus:ring-[var(--accent-soft)]
+           transition-all duration-200;
+  }
+
+  /* Select — native dropdown options must have solid bg, no blur */
+  select.input {
+    background-color: #ffffff;
+    color: #1d1d1f;
+  }
+  .dark select.input {
+    background-color: #1c1c1e;
+    color: #f5f5f7;
+  }
+  select.input option {
+    background-color: #ffffff;
+    color: #1d1d1f;
+  }
+  .dark select.input option {
+    background-color: #1c1c1e;
+    color: #f5f5f7;
+  }
+
+  /* Nav item */
+  .nav-item {
+    color: var(--text-subtle);
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl
+           transition-all duration-200 cursor-pointer text-sm font-medium;
+  }
+  .nav-item:hover {
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+  }
+  .nav-item.active {
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid rgba(99,102,241,0.2);
+  }
+  .dark .nav-item.active {
+    color: #a5b4fc;
+    background: rgba(129,140,248,0.12);
+    border: 1px solid rgba(129,140,248,0.2);
+  }
+
+  /* Badge */
+  .badge { @apply text-xs font-medium px-2 py-0.5 rounded-full; }
+
+  /* Sidebar */
+  .sidebar {
+    background: var(--bg-overlay);
+    border-right: 1px solid var(--border-color);
+    @apply backdrop-blur-2xl;
+  }
+
+  /* Navbar */
+  .navbar {
+    background: var(--bg-overlay);
+    border-bottom: 1px solid var(--border-color);
+    @apply backdrop-blur-2xl;
+  }
+
+  /* Pill button */
+  .btn-pill {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
+           transition-all duration-200 active:scale-95;
+  }
+}
+
+/* ─── Utilities ─────────────────────────────────────────────── */
+@layer utilities {
+  .shadow-glow { box-shadow: 0 0 20px rgba(99,102,241,0.35); }
+  .shadow-glow-sm { box-shadow: 0 0 12px rgba(99,102,241,0.25); }
+  .text-gradient {
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+}
+
+/* ─── Animations ────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in  { animation: fadeIn  0.2s ease-out both; }
+.animate-slide-up { animation: slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1) both; }
+.animate-slide-down { animation: slideDown 0.2s ease-out both; }
+.animate-scale-in { animation: scaleIn 0.2s cubic-bezier(0.34,1.56,0.64,1) both; }
