@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Bell, ChevronDown, LogOut, Settings, User, Command } from 'lucide-react'
+import { Bell, ChevronDown, LogOut, Settings, User, Command, Menu } from 'lucide-react'
 import { useAuthStore } from '../../stores/authStore'
 import { useNotificationsStore } from '../../stores/notificationsStore'
 import { useUIStore } from '../../stores/uiStore'
@@ -16,7 +16,7 @@ const TYPE_COLOR: Record<string, string> = {
 export default function Navbar() {
   const { user, signOut } = useAuthStore()
   const { notifications, markRead, markAllRead, unreadCount } = useNotificationsStore()
-  const { setCommandBar } = useUIStore()
+  const { setCommandBar, toggleSidebar } = useUIStore()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [notifOpen, setNotifOpen]       = useState(false)
   const navigate   = useNavigate()
@@ -38,12 +38,22 @@ export default function Navbar() {
     : user?.email?.[0]?.toUpperCase() || 'U'
 
   return (
-    <header className="navbar fixed top-0 left-60 right-0 h-14 flex items-center justify-between px-6 z-30 transition-all duration-300">
-      <div>
+    <header className="navbar fixed top-0 left-0 md:left-60 right-0 h-14 flex items-center justify-between px-4 md:px-6 z-30 transition-all duration-300">
+      <div className="flex items-center gap-3">
+        {/* Hamburger — mobile only */}
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden w-9 h-9 rounded-xl card flex items-center justify-center
+                     text-[var(--text-subtle)] hover:text-[var(--text-primary)] transition-all duration-200"
+        >
+          <Menu size={17} />
+        </button>
+        <div>
         <p className="text-sm font-semibold text-[var(--text-primary)] leading-tight">{getGreeting(user?.full_name)}</p>
-        <p className="text-xs text-[var(--text-subtle)]">
+        <p className="text-xs text-[var(--text-subtle)] hidden sm:block">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
+        </div>
       </div>
 
       <div className="flex items-center gap-2">

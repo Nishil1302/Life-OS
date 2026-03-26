@@ -160,7 +160,7 @@ export default function AICoachPage() {
   })
 
   return (
-    <div className="flex w-full gap-5">
+    <div className="flex flex-col xl:flex-row w-full gap-5">
       {/* Main */}
       <div className="flex-1 min-w-0 space-y-5">
         <div className="flex items-center justify-between">

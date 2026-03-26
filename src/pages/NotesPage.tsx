@@ -72,9 +72,9 @@ export default function NotesPage() {
 
   return (
     <div className="max-w-6xl">
-      <div className="flex h-[calc(100vh-8rem)] gap-4">
+      <div className="flex flex-col md:flex-row h-auto md:h-[calc(100vh-8rem)] gap-4">
         {/* Sidebar */}
-        <div className="w-72 flex-shrink-0 flex flex-col gap-3">
+        <div className="w-full md:w-72 flex-shrink-0 flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-subtle)]" />
@@ -85,7 +85,7 @@ export default function NotesPage() {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto space-y-1">
+          <div className="flex-1 md:overflow-y-auto space-y-1">
             {loading ? (
               <div className="flex justify-center py-8"><Spinner /></div>
             ) : filtered.length === 0 ? (
@@ -117,7 +117,7 @@ export default function NotesPage() {
         </div>
 
         {/* Editor */}
-        <div className="flex-1 card flex flex-col overflow-hidden">
+        <div className="flex-1 card flex flex-col overflow-hidden min-h-[400px] md:min-h-0">
           {selected ? (
             <>
               <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border-color)]">

@@ -46,6 +46,7 @@
     background-color: var(--bg-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   body {
@@ -54,6 +55,7 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
     font-feature-settings: 'cv02','cv03','cv04','cv11';
     transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
   }
 
   ::-webkit-scrollbar { width: 4px; height: 4px; }

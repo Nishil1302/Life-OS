@@ -31,11 +31,11 @@ export default function Layout() {
   }, [tasks, habits, logs])
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
+    <div className="min-h-screen bg-[var(--bg-primary)] transition-colors duration-300 overflow-x-hidden">
       <Sidebar />
       <Navbar />
-      <main className="ml-60 pt-14 min-h-screen">
-        <div className="p-6 animate-fade-in">
+      <main className="md:ml-60 pt-14 min-h-screen">
+        <div className="p-4 md:p-6 animate-fade-in max-w-full">
           <Outlet />
         </div>
       </main>

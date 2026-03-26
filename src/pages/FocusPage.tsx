@@ -97,7 +97,7 @@ export default function FocusPage() {
   const ringColor = isBreak ? '#34d399' : active ? '#6366f1' : 'var(--border-color)'
 
   return (
-    <div className="flex w-full gap-5">
+    <div className="flex flex-col xl:flex-row w-full gap-5">
       {/* Main */}
       <div className="flex-1 min-w-0 space-y-5">
         <div>
@@ -149,7 +149,7 @@ export default function FocusPage() {
 
           {/* Ring */}
           <div className="relative">
-            <svg width="260" height="260" className="-rotate-90">
+            <svg width="220" height="220" viewBox="0 0 260 260" className="-rotate-90 w-[180px] h-[180px] sm:w-[220px] sm:h-[220px]">
               <circle cx="130" cy="130" r={r} fill="none" stroke="var(--border-color)" strokeWidth="10" />
               <circle cx="130" cy="130" r={r} fill="none"
                 stroke={ringColor} strokeWidth="10"

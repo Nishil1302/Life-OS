@@ -110,7 +110,7 @@ export default function HabitsPage() {
   }
 
   return (
-    <div className="flex gap-6 items-start">
+    <div className="flex flex-col lg:flex-row gap-6 items-start">
       {/* ── Main content ── */}
       <div className="flex-1 min-w-0 space-y-5">
         <div className="flex items-center justify-between">
@@ -219,7 +219,7 @@ export default function HabitsPage() {
       </div>
 
       {/* ── Right panel ── */}
-      <div className="w-64 flex-shrink-0 space-y-4 sticky top-20">
+      <div className="hidden lg:block w-64 flex-shrink-0 space-y-4 lg:sticky top-20">
         {/* Today summary */}
         <div className="card p-4 space-y-3">
           <div className="flex items-center gap-2">

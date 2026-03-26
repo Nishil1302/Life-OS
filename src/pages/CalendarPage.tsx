@@ -44,7 +44,7 @@ export default function CalendarPage() {
   const todayDone = todayTasks.filter((t) => t.status === 'done').length
 
   return (
-    <div className="flex w-full gap-6">
+    <div className="flex flex-col xl:flex-row w-full gap-6">
       {/* Main */}
       <div className="flex-1 min-w-0 space-y-6">
         <div>
